@@ -19,13 +19,13 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "dev": "concurrently \" npm start \" \" nodemon server/server.js\"",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "node server/server",
+    "server": "nodemon server/server",
+    "client": "npm start --prefix frontend",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "data:import": "node backend/seeder",
+    "data:destroy": "node backend/seeder -d"
   },
-  "proxy": "http://localhost:4000/",
   "eslintConfig": {
     "extends": [
       "react-app",
