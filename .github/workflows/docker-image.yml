@@ -18,10 +18,11 @@ jobs:
       env:
         DOCKER_USER: ${{secrets.DOCKER_USER}}
         DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+        TIMESTAMP: $(date +%s)
       run: |
         docker login -u $DOCKER_USER -p $DOCKER_PASSWORD 
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag shai2426/node-test:$(date +%s)
+      run: docker build . --file Dockerfile --tag shai2426/node-test:$TIMESTAMP
       
     - name: Docker Push
-      run: docker push shai2426/node-test:$(date +%s)
+      run: docker push shai2426/node-test:$TIMESTAMP
