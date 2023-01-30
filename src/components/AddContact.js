@@ -41,6 +41,9 @@ class AddContact extends React.Component{
                 </div>
                 <button className="ui button blue">Add</button>
                 </form>
+                <div className="ui container">
+                <button className="ui button grey" onClickCapture={()=> {const {navigation} = this.props;navigation(-1)}}>Back</button>
+                </div>
         </div>
     )};
 }

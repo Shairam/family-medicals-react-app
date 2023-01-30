@@ -1,14 +1,21 @@
 import React, { useRef } from "react";
 import ContactCard from "./ContactCard";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";   
+import useAuth from "./useAuth";
 
 
 const ContactList = (props) => {
     console.log(props);
     const inputEl= useRef("");
+    const {setAuth} = useAuth();
+    const navigation = useNavigate();
     const deleteContactHandler = (id) => {
         props.getContactId(id);
     };
+    const logout = ()=>{
+       setAuth({});
+       navigation('/login');
+    }
 
     const renderContactList = props.contacts.map((contact) => {
         return (
@@ -32,9 +39,12 @@ const ContactList = (props) => {
         <div className="main">
             <h2>
                 Medicines List
+                <div className="ui container compact">
+                    <button className="ui button red right floated" onClickCapture={logout}>Logout</button>
                 <Link to='/add'>
                     <button className="ui button blue right floated">Add Medicine</button>
                 </Link>
+                </div>
             </h2>
             <div className='ui search'>
                 <div className='ui icon input'>

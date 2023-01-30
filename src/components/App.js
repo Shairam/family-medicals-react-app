@@ -3,10 +3,12 @@ import Header from './Header';
 import { BrowserRouter as Router, Switch, Route, Routes } from 'react-router-dom';
 import ContactList from './ContactList';
 import AddContact from './AddContact';
-import api from '../apis/contacts'
+import api from '../apis/contacts';
 import React, { useState, useEffect } from 'react';
 import ContactDetails from './ContactDetails';
 import EditContact from './EditContact';
+import Login from './Login';
+import ProtectedRoute from '../ProtectedRoute';
 
 
 function App() {
@@ -16,13 +18,13 @@ function App() {
 
   const fetchData = async () => {
     const response = await api.get('/api/getAll')
-     const data = await response.data;
-      setContacts(data);
-    };
-  
-    useEffect(() => {
-      fetchData();
-    }, []);
+    const data = await response.data;
+    setContacts(data);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const addContactHandler = async (contact) => {
     const req = {
@@ -33,24 +35,24 @@ function App() {
     setContacts([...contacts, response.data])
   };
 
-  const updateContactHandler = async(contact) => {
-    const resp = await api.put(`api/update/${contact._id}`,contact )
-    const {_id, name, email} = resp.data
+  const updateContactHandler = async (contact) => {
+    const resp = await api.put(`api/update/${contact._id}`, contact)
+    const { _id, name, email } = resp.data
     setContacts(
-      contacts.map((contact)=>{
-        return contact._id === _id ? {...resp.data} : contact;
+      contacts.map((contact) => {
+        return contact._id === _id ? { ...resp.data } : contact;
       })
     );
   }
 
   const deleteContactHandler = async (id) => {
     const resp = await api.delete(`/api/delete/${id}`);
-    let filtered_list =[];
+    let filtered_list = [];
     if (resp.status == 200) {
-     filtered_list = contacts.filter((contact)=> {
-      return contact._id !== id;
-    })
-  }
+      filtered_list = contacts.filter((contact) => {
+        return contact._id !== id;
+      })
+    }
 
     setContacts(filtered_list);
   }
@@ -58,9 +60,9 @@ function App() {
   const searchHandler = (searchTerm) => {
     console.log(searchTerm);
     setSearchTerm(searchTerm)
-    if (searchTerm !== ""){
-      const newContactList = contacts.filter((contact)=> {
-       return Object.values(contact).join(" ").toLowerCase().includes(searchTerm.toLowerCase())
+    if (searchTerm !== "") {
+      const newContactList = contacts.filter((contact) => {
+        return Object.values(contact).join(" ").toLowerCase().includes(searchTerm.toLowerCase())
       });
       console.log(newContactList)
       setSearchResult(newContactList)
@@ -82,16 +84,19 @@ function App() {
     <div>
       <Header />
       <Router>
-      <Routes>
-      <Route path='/' element={
-        <ContactList contacts={searchTerm < 1 ? contacts : searchResult} getContactId={deleteContactHandler} term={searchTerm} searchKeyword={searchHandler}></ContactList>}/>
-      <Route path='/add' element={
-        <AddContact addContactHandler={addContactHandler}></AddContact>}/>
-        <Route path='/edit' element={
-        <EditContact updateContactHandler={updateContactHandler}></EditContact>}/>
-      <Route path ='/contact/:id' element={<ContactDetails></ContactDetails>}/>  
-      </Routes>
-      {/* <AddContact addContactHandler={addContactHandler}></AddContact>
+        <Routes>
+          <Route path='/login' element={<Login />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path='/' element={
+              <ContactList contacts={searchTerm < 1 ? contacts : searchResult} getContactId={deleteContactHandler} term={searchTerm} searchKeyword={searchHandler}></ContactList>} />
+            <Route path='/add' element={
+              <AddContact addContactHandler={addContactHandler}></AddContact>} />
+            <Route path='/edit' element={
+              <EditContact updateContactHandler={updateContactHandler}></EditContact>} />
+            <Route path='/contact/:id' element={<ContactDetails></ContactDetails>} />
+          </Route>
+        </Routes>
+        {/* <AddContact addContactHandler={addContactHandler}></AddContact>
       <ContactList contacts={contacts} getContactId={deleteContactHandler}></ContactList> */}
       </Router>
     </div>

@@ -5,7 +5,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 
 
 const EditContact = (props) => {
-    const location = useLocation()
+    const location = useLocation();
     const [contact, setContact] = useState({
         _id: location.state.contact._id,
         name: location.state.contact.name,
