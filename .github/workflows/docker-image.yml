@@ -24,4 +24,4 @@ jobs:
       run: docker build . --file Dockerfile --tag shai2426/node-test:$(date +%s)
       
     - name: Docker Push
-      run: docker push shai2426/node-test
+      run: docker push shai2426/node-test:$(date +%s)
