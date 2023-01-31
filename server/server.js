@@ -30,7 +30,7 @@ app.use(function (req, res, next) {
 });
 
 
-app.use('/api',verifyJWT, mediRoutes);
+app.use('/api', mediRoutes);
 app.use('/auth', authRoutes);
 
 app.use(express.static(path.join(__dirname, '../build')));
