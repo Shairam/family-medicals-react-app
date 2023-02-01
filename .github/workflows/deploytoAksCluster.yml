@@ -14,8 +14,8 @@ jobs:
     - name: Build and push image to ACR
       id: build-image
       run: |
-        docker build "$GITHUB_WORKSPACE/" -f  "Dockerfile" -t acrworkflow1675221303607.azurecr.io/devtesing:${{ github.sha }} --label dockerfile-path=Dockerfile
-        docker push acrworkflow1675221303607.azurecr.io/devtesing:${{ github.sha }}
+        docker build "$GITHUB_WORKSPACE/" -f  "Dockerfile" -t acrworkflow1675221303607.azurecr.io/node-web-app:${{ github.sha }} --label dockerfile-path=Dockerfile
+        docker push acrworkflow1675221303607.azurecr.io/node-web-app:${{ github.sha }}
     
     - uses: azure/k8s-set-context@v1
       with:
@@ -45,6 +45,6 @@ jobs:
           manifests/deployment.yml
           manifests/service.yml
         images: |
-          acrworkflow1675221303607.azurecr.io/devtesing:${{ github.sha }}
+          acrworkflow1675221303607.azurecr.io/node-web-app:${{ github.sha }}
         imagepullsecrets: |
           devtesingdockerauth

@@ -1,19 +1,19 @@
 apiVersion : apps/v1
 kind: Deployment
 metadata:
-  name: "devtesing-36bc"
+  name: "node-web-app"
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: "devtesing-36bc"
+      app: "node-web-app"
   template:
     metadata:
       labels:
-        app: "devtesing-36bc"
+        app: "node-web-app"
     spec:
       containers:
-        - name: "devtesing-36bc"
-          image: "acrworkflow1675221303607.azurecr.io/devtesing"
+        - name: "node-web-app"
+          image: "acrworkflow1675221303607.azurecr.io/node-web-app"
           ports:
           - containerPort: 8080

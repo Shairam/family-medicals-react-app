@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-    name: "devtesing-36bc"
+    name: "node-web-app"
     labels:
-        app: "devtesing-36bc"
+        app: "node-web-app"
 spec:
     type: LoadBalancer
     ports:
@@ -12,4 +12,4 @@ spec:
       protocol: TCP
       name: http
     selector:
-        app: "devtesing-36bc"
+        app: "node-web-app"
