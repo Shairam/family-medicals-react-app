@@ -17,6 +17,6 @@ spec:
     spec:
       containers:
       - name: node-web
-        image: shai2426/node-test:4041533695-4-1
+        image: shai2426/node-test:4053178213-5-1
         ports:
         - containerPort: 8080
