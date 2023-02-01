@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: "devtesing-36bc"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: "devtesing-36bc"
+  template:
+    metadata:
+      labels:
+        app: "devtesing-36bc"
+    spec:
+      containers:
+        - name: "devtesing-36bc"
+          image: "acrworkflow1675221303607.azurecr.io/devtesing"
+          ports:
+          - containerPort: 8080
