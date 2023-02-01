@@ -1,0 +1,50 @@
+on: [push]
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    
+    - uses: azure/docker-login@v1
+      with:
+        login-server: acrworkflow1675221303607.azurecr.io
+        username: ${{ secrets.acr_acrworkflow1675221303607_username }}
+        password: ${{ secrets.acr_acrworkflow1675221303607_password }}
+    
+    - name: Build and push image to ACR
+      id: build-image
+      run: |
+        docker build "$GITHUB_WORKSPACE/" -f  "Dockerfile" -t acrworkflow1675221303607.azurecr.io/devtesing:${{ github.sha }} --label dockerfile-path=Dockerfile
+        docker push acrworkflow1675221303607.azurecr.io/devtesing:${{ github.sha }}
+    
+    - uses: azure/k8s-set-context@v1
+      with:
+         kubeconfig: ${{ secrets.aks_devtesing_kubeConfig }}
+      id: login
+    
+    - name: Create namespace
+      run: |
+        namespacePresent=`kubectl get namespace | grep dev-node-app | wc -l`
+        if [ $namespacePresent -eq 0 ]
+        then
+            echo `kubectl create namespace dev-node-app`
+        fi
+
+    - uses: azure/k8s-create-secret@v1
+      with:
+        namespace: dev-node-app
+        container-registry-url: acrworkflow1675221303607.azurecr.io
+        container-registry-username: ${{ secrets.acr_acrworkflow1675221303607_username }}
+        container-registry-password: ${{ secrets.acr_acrworkflow1675221303607_password }}
+        secret-name: devtesingdockerauth
+       
+    - uses: azure/k8s-deploy@v1.2
+      with:
+        namespace: dev-node-app
+        manifests: |
+          manifests/deployment.yml
+          manifests/service.yml
+        images: |
+          acrworkflow1675221303607.azurecr.io/devtesing:${{ github.sha }}
+        imagepullsecrets: |
+          devtesingdockerauth
